@@ -1,6 +1,7 @@
 use std::default::Default;
+use std::ffi::CString;
 
-use effy::FFI;
+use effy::*;
 
 #[derive(Default, FFI)]
 pub struct TestStruct {
@@ -17,12 +18,11 @@ pub struct TestStruct {
     float32: f32,
     float64: f64,
     boolean: bool,
+    string: String,
 }
 
 #[test]
 fn test() {
-    use FFI::*;
-
     unsafe {
         let test = test_struct_new();
 
@@ -68,6 +68,19 @@ fn test() {
         assert_eq!(test_struct_float32(test), 13.13);
         assert_eq!(test_struct_float64(test), 13.13);
         assert_eq!(test_struct_boolean(test), true);
+
+        // -- String
+        let s = string_new();
+        assert_eq!((*s).to_string(), "");
+
+        test_struct_string(test, s);
+        assert_eq!((*s).to_string(), "");
+
+        let new_string = CString::new("test").unwrap_or_default();
+        let new_string_raw = new_string.into_raw();
+        test_struct_set_string(test, new_string_raw);
+        test_struct_string(test, s);
+        assert_eq!((*s).to_string(), "test");
 
         test_struct_free(test);
     }

@@ -1,0 +1,12 @@
+[package]
+name = "effy"
+version = "0.0.0"
+authors = ["Ralph Minderhoud <mail@ralphminderhoud.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["staticlib", "cdylib", "lib"]
+
+[dependencies]
+effy-derive = {path = "../effy-derive" }
+effy-support = { path = "../effy-support" }
